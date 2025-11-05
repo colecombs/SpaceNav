@@ -1,3 +1,1 @@
-/cspice filter=lfs diff=lfs merge=lfs -text
-/kernels filter=lfs diff=lfs merge=lfs -text
-/star_catlg filter=lfs diff=lfs merge=lfs -text
+cspice/**/* filter=lfs diff=lfs merge=lfs -text
