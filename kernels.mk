@@ -1,11 +1,13 @@
 \begindata
 
    KERNELS_TO_LOAD = (
-      'kernels/naif0012.tls'
-      'kernels/de440.bsp'
+      'kernels/de421.bsp'
+      'kernels/de440s.bsp'
+      'kernels/de442s.bsp'
       'kernels/gm_de440.tpc'
       'kernels/pck00010.tpc'
       'kernels/pck00011.tpc'
+      'kernels/naif0012.tls'
       'kernels/naif0011.tls'
       'kernels/L1_de441.bsp'
       'kernels/L2_de441.bsp'
