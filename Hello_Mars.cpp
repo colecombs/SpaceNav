@@ -16,6 +16,7 @@
 // and C++ streams (iostream) for error messages.
 #include <iostream>
 #include <stdio.h>
+#include <string> // Added for std::string and std::cin
 
 // The one and only C-style header file you need for CSPICE.
 // It contains all function declarations.
@@ -64,14 +65,21 @@ int main() {
     SpiceDouble lightTime;      // One-way light time from target to observer
     SpiceDouble marsState[6];   // Output state vector (x,y,z, vx,vy,vz)
     
-    // We'll ask for the state of Mars "now".
-    // 'str2et_c' converts a time string to Ephemeris Time.
-    //
-    // EDIT: "now" is not a reliable string for str2et_c.
-    // We will use a specific ISO 8601 time string, which is
-    // guaranteed to work. Let's use the current time.
-    const char* timeString = "2025-10-31T18:50:00";
-    str2et_c(timeString, &et);
+    // Get user input for date and time
+    std::string date_str;
+    std::string time_str;
+
+    std::cout << "Enter Date (YYYY-MM-DD): ";
+    std::cin >> date_str;
+
+    std::cout << "Enter Time (HH:MM:SS): ";
+    std::cin >> time_str;
+
+    // Combine them into the ISO format that str2et_c understands
+    // (e.g., "2025-10-31T18:50:00")
+    std::string iso_time_string = date_str + "T" + time_str;
+    
+    str2et_c(iso_time_string.c_str(), &et);
     checkSpiceError("str2et_c (converting time string)");
 
     // --- 3. Perform the Calculation ---
@@ -96,7 +104,8 @@ int main() {
     // The first 3 elements of marsState are the x,y,z position
     // in kilometers.
     printf("\n");
-    printf("Position of Mars relative to Earth at %s UTC:\n", timeString);
+    // Use the user's combined string in the output
+    printf("Position of Mars relative to Earth at %s UTC:\n", iso_time_string.c_str());
     printf("  X: %15.3f km\n", marsState[0]);
     printf("  Y: %15.3f km\n", marsState[1]);
     printf("  Z: %15.3f km\n", marsState[2]);
@@ -111,7 +120,3 @@ int main() {
 
     return 0;
 }
-
-
-
-

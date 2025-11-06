@@ -40,6 +40,7 @@ const double G0_KMS = 9.80665 / 1000.0;
 /**
  * @brief Utility function to check for SPICE errors after a call.
  * If an error is found, it prints the long message and exits.
+ * This is for critical, unrecoverable errors.
  */
 void checkSpiceError(const char *operation)
 {
@@ -95,6 +96,40 @@ double calculate_fuel(double dry_mass, double delta_v, double isp)
     return fuel_mass;
 }
 
+/**
+ * @brief Prompts the user for a date and validates it using SPICE.
+ * Loops until a valid date string is entered.
+ * @param prompt The message to display to the user.
+ * @return A valid SpiceDouble ephemeris time.
+ */
+SpiceDouble getValidDate(const std::string& prompt)
+{
+    std::string date_str;
+    SpiceDouble et;
+
+    while (true)
+    {
+        std::cout << prompt;
+        std::getline(std::cin, date_str);
+
+        // Try to parse the string
+        str2et_c(date_str.c_str(), &et);
+
+        if (failed_c())
+        {
+            // If it fails, clear the error and tell the user
+            reset_c();
+            std::cerr << "!! Invalid date format. Please use a recognized format (e.g., 'YYYY-MM-DD HH:MM').\n";
+        }
+        else
+        {
+            // Success, exit the loop
+            break;
+        }
+    }
+    return et;
+}
+
 
 /**
  * @brief A helper struct to hold the results of a transfer calculation.
@@ -114,7 +149,6 @@ struct TransferAnalysis
  * @param sun_gm Gravitational parameter of the Sun.
  * @param origin_body Name of the origin body.
  * @param departure_et Ephemeris time of departure.
- *TA
  * @param dest_body Name of the destination body.
  * @param arrival_et Ephemeris time of arrival.
  * @return A TransferAnalysis struct with the calculated dV values.
@@ -178,7 +212,7 @@ void runSpecificDateMode(SpiceDouble sun_gm)
     std::cout << "Enter Engine ISP (seconds): ";
     std::cin >> isp;
 
-    std::string origin_body, dest_body, dep_date, arr_date;
+    std::string origin_body, dest_body;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     std::cout << "\n--- Mission Parameters ---" << std::endl;
@@ -188,19 +222,10 @@ void runSpecificDateMode(SpiceDouble sun_gm)
     std::cout << "Enter Destination Body (e.g., MARS BARYCENTER): ";
     std::getline(std::cin, dest_body);
 
-    std::cout << "Enter Departure Date (e.g., 2035-04-25 12:00): ";
-    std::getline(std::cin, dep_date);
-
-    std::cout << "Enter Arrival Date (e.g., 2036-01-08 09:00): ";
-    std::getline(std::cin, arr_date);
-
     // --- Calculations ---
-    SpiceDouble departure_et, arrival_et;
-    str2et_c(dep_date.c_str(), &departure_et);
-    checkSpiceError("str2et_c (Parsing departure date)");
-    
-    str2et_c(arr_date.c_str(), &arrival_et);
-    checkSpiceError("str2et_c (Parsing arrival date)");
+    // Use our new validated date input function
+    SpiceDouble departure_et = getValidDate("Enter Departure Date (e.g., 2035-04-25 12:00): ");
+    SpiceDouble arrival_et = getValidDate("Enter Arrival Date (e.g., 2036-01-08 09:00): ");
 
     try
     {
@@ -245,7 +270,7 @@ void runSearchMode(SpiceDouble sun_gm)
     std::cout << "Enter Engine ISP (seconds): ";
     std::cin >> isp;
 
-    std::string origin_body, dest_body, dep_date;
+    std::string origin_body, dest_body;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     std::cout << "\n--- Mission Parameters ---" << std::endl;
@@ -255,13 +280,9 @@ void runSearchMode(SpiceDouble sun_gm)
     std::cout << "Enter Destination Body (e.g., MARS BARYCENTER): ";
     std::getline(std::cin, dest_body);
 
-    std::cout << "Enter *Start* of Departure Window (e.g., 2035-01-01): ";
-    std::getline(std::cin, dep_date);
-
     // --- Calculations ---
-    SpiceDouble departure_start_et;
-    str2et_c(dep_date.c_str(), &departure_start_et);
-    checkSpiceError("str2et_c (Parsing departure start date)");
+    // *** FIX: Use the robust getValidDate function here ***
+    SpiceDouble departure_start_et = getValidDate("Enter *Start* of Departure Window (e.g., 2035-01-01): ");
 
     double dv_capability = calculate_dv(dry_mass, fuel_mass, isp);
 
@@ -278,7 +299,7 @@ void runSearchMode(SpiceDouble sun_gm)
     // Search step size. 5 days is faster. 1 day is more precise.
     const int step_days = 5; 
 
-    std::cout << "Searching Departure Window: " << dep_date << " to ~1 year after." << std::endl;
+    std::cout << "Searching Departure Window: " << "from your input date" << " to ~1 year after." << std::endl;
     std::cout << "Searching Flight Times: " << tof_min_days << " to " << tof_max_days << " days" << std::endl;
     std::cout << "This may take a moment..." << std::endl;
 
