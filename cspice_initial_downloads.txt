@@ -1,0 +1,35 @@
+Initial downloads for useing cspice toolkit.
+
+wget https://naif.jpl.nasa.gov/pub/naif/toolkit/C/PC_Linux_GCC_64bit/packages/cspice.tar.Z
+
+wget https://naif.jpl.nasa.gov/pub/naif/toolkit/C/PC_Linux_GCC_64bit/packages/N0067
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0011.tls
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0012.tls
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/a_old_versions/de421.bsp
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440.bsp
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de442.bsp
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/lagrange_point/L1_de441.bsp
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/lagrange_point/L2_de441.bsp
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/lagrange_point/L4_de441.bsp
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/lagrange_point/L5_de441.bsp
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/gm_de440.tpc
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00010.tpc
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00011.tpc
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/stars/tycho2.xdb.Z
+
+wget https://naif.jpl.nasa.gov/pub/naif/generic_kernels/stars/readme.txt

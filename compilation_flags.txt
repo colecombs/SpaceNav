@@ -1,0 +1,1 @@
+g++ Hello_Mars.cpp -o HelloMars -I./cspice/include ./cspice/lib/cspice.a -lm
